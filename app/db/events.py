@@ -1,19 +1,27 @@
-import asyncpg
+#import asyncpg
+#import asyncio
+import aiomysql
 from fastapi import FastAPI
 from loguru import logger
 
-from app.core.settings.app import AppSettings
+from app.core.config import HOST, PORT, USER, PWD, DB, DATABASE_URL, MAX_CONNECTIONS_COUNT, MIN_CONNECTIONS_COUNT
 
 
-async def connect_to_db(app: FastAPI, settings: AppSettings) -> None:
-    logger.info("Connecting to PostgreSQL")
+#loop = asyncio.get_event_loop()
+async def connect_to_db(app: FastAPI) -> None:
+    logger.info("Connecting to {0}", repr(DATABASE_URL))
 
+    app.state.pool = await aiomysql.create_pool(host=str(HOST), port=int(PORT),
+                                           user=str(USER), password=str(PWD),
+                                           db=str(DB), loop=None, autocommit=False)
+
+    '''
     app.state.pool = await asyncpg.create_pool(
-        str(settings.database_url),
-        min_size=settings.min_connection_count,
-        max_size=settings.max_connection_count,
+        str(DATABASE_URL),
+        min_size=MIN_CONNECTIONS_COUNT,
+        max_size=MAX_CONNECTIONS_COUNT,
     )
-
+    '''
     logger.info("Connection established")
 
 

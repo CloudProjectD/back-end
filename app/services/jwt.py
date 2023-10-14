@@ -13,15 +13,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # one week
 
 
 def create_jwt_token(
-    *,
-    jwt_content: Dict[str, str],
-    secret_key: str,
-    expires_delta: timedelta,
+    *, jwt_content: Dict[str, str], secret_key: str, expires_delta: timedelta
 ) -> str:
     to_encode = jwt_content.copy()
     expire = datetime.utcnow() + expires_delta
     to_encode.update(JWTMeta(exp=expire, sub=JWT_SUBJECT).dict())
-    return jwt.encode(to_encode, secret_key, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, secret_key, algorithm=ALGORITHM).decode()
 
 
 def create_access_token_for_user(user: User, secret_key: str) -> str:

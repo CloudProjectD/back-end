@@ -8,7 +8,7 @@ from app.services import security
 class User(RWModel):
     username: str
     email: str
-    bio: str = ""
+    bio: Optional[str] = ""
     image: Optional[str] = None
 
 

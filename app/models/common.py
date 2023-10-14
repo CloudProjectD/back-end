@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, validator
 
 
 class DateTimeModelMixin(BaseModel):
@@ -9,11 +9,10 @@ class DateTimeModelMixin(BaseModel):
 
     @validator("created_at", "updated_at", pre=True)
     def default_datetime(
-        cls,  # noqa: N805
-        value: datetime.datetime,  # noqa: WPS110
+        cls, value: datetime.datetime  # noqa: N805, WPS110
     ) -> datetime.datetime:
         return value or datetime.datetime.now()
 
 
 class IDModelMixin(BaseModel):
-    id_: int = Field(0, alias="id")
+    id: int = 0
