@@ -16,10 +16,7 @@ def create_user(
     Create new user.
     """
     user_in.username
-    db_obj = User(
-      email=user_in.email,
-      username=user_in.username
-    )
+    db_obj = User(email=user_in.email,username=user_in.username)
     print(User)
     db.add(db_obj)
     db.commit()
