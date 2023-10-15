@@ -17,14 +17,14 @@ VERSION = "1.0.0"
 config = Config(".env")
 
 DEBUG: bool = config("DEBUG", cast=bool, default=False)
-
+SECRET_KEY: str = config("SECRET_KEY",cast=str)
 DATABASE_URL: DatabaseURL = config("DB_CONNECTION", cast=DatabaseURL)
 MAX_CONNECTIONS_COUNT: int = config("MAX_CONNECTIONS_COUNT", cast=int, default=10)
 MIN_CONNECTIONS_COUNT: int = config("MIN_CONNECTIONS_COUNT", cast=int, default=10)
 HOST:str = config("HOST",cast=str,default="127.0.0.1")
 PORT:int = config("PORT",cast=int,default=3306)
 USER:str = config("USER",cast=str,default="root")
-PWD:str = config("PWD",cast=str,default="")
+PWD:str = config("PWD",cast=str,default="1234")
 DB:str = config("DB",cast=str,default="")
 
 SECRET_KEY: Secret = config("SECRET_KEY", cast=Secret)

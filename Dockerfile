@@ -5,12 +5,7 @@ ENV PYTHONUNBUFFERED 1
 EXPOSE 8000
 WORKDIR /app
 
-COPY poetry.lock pyproject.toml ./
-RUN pip install poetry==1.0.* && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-dev
+COPY . .
+RUN pip install -r requirements.txt
 
-COPY . ./
-
-CMD alembic upgrade head && \
-    uvicorn --host=0.0.0.0 app.main:app
+CMD	uvicorn --host=0.0.0.0 app.main:app

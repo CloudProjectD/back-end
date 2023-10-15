@@ -1,18 +1,14 @@
 from typing import Optional
-
-from app.models.common import DateTimeModelMixin, IDModelMixin
-from app.models.domain.rwmodel import RWModel
+from pydantic import BaseModel
 from app.services import security
 
 
-class User(RWModel):
+class User(BaseModel):
     username: str
     email: str
-    bio: Optional[str] = ""
-    image: Optional[str] = None
 
 
-class UserInDB(IDModelMixin, DateTimeModelMixin, User):
+class UserInDB(User):
     salt: str = ""
     hashed_password: str = ""
 
