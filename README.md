@@ -88,6 +88,8 @@ Download and install packages and associated dependencies via `pip install`
   pip install -r requirements.txt
   source ./venv/bin/activate
   ```
+#### If you want to use Docker, then run `docker compose up -d`(Also it needs to stop with `docker compose down`).
+#### ** Also, you have to run `black ./` before making pull request.
 
 ### :pencil2: Configuration
 Setting environment variables through `.env`
@@ -101,7 +103,6 @@ MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=1234
 DB_NAME=fastapi
-
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
