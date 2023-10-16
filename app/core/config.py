@@ -11,7 +11,7 @@ from app.core.logging import InterceptHandler
 
 class Settings(BaseSettings):
     config: Config = Config(".env")
-    API_PREFIX: str = "/api"
+    API_PREFIX: str = "/api/v1"
     JWT_TOKEN_PREFIX: str = "Token"
     VERSION: str = "1.0.0"
 
