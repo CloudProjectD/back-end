@@ -2,6 +2,7 @@ from sqlalchemy import Boolean, Column, Integer, String
 
 from app.db.base_class import Base
 
+
 class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     username = Column(String(255), index=True)
