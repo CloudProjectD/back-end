@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      no_cache: true
+      context: .
     ports:
       - "8000:8000"
     env_file:
