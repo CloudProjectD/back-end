@@ -281,6 +281,7 @@ Please refer to `LICENSE.txt` for LICENSE.
     <tr>
       <td align="center"><a href="https://github.com/Eeap"><img src="https://avatars.githubusercontent.com/u/42088290?v=4" width="100px;" alt=""/><br /><sub><b>Sumin Kim</b></sub></a></td>
       <td align="center"><a href="https://github.com/dusdjhyeon"><img src="https://avatars.githubusercontent.com/u/73868703?v=4" width="100px;" alt=""/><br /><sub><b>Dahyun Kang</b></sub></a></td>
+      <td align="center"><a href="https://github.com/nahyun0121"><img src="https://avatars.githubusercontent.com/u/71493251?v=4" width="100px;" alt=""/><br /><sub><b>Nahyun Kim</b></sub></a></td>
     </tr>
   </tobdy>
 </table>
