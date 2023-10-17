@@ -8,5 +8,4 @@ class PostCreate(BaseModel):
     content: str
     status: Status
     category: str
-    image: bool
     user_id: Optional[int] = None

@@ -14,4 +14,3 @@ class MarketCreate(BaseModel):
     content: str
     status: Status
     category: str
-    image: bool
