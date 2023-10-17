@@ -11,10 +11,11 @@ def s3_upload(files: List[UploadFile], post_id: int, user_email: str) -> bool:
         region_name="us-east-1",
         aws_access_key_id=settings.AWS_ACCESS_KEY,
         aws_secret_access_key=settings.AWS_SECRET_KEY,
+        aws_session_token=settings.AWS_SESSION_TOKEN
     )
     try:
         for file in files:
-            new_filename = f"/{user_email}/{post_id}/{file.filename}"
+            new_filename = f"{user_email}/{post_id}/{file.filename}"
             client.upload_fileobj(
                 file.file,
                 settings.BUCKET_NAME,

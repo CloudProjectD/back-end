@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     BUCKET_NAME: str = config("BUCKET_NAME", cast=str)
     AWS_ACCESS_KEY: str = config("AWS_ACCESS_KEY", cast=str)
     AWS_SECRET_KEY: str = config("AWS_SECRET_KEY", cast=str)
+    AWS_SESSION_TOKEN: str = config("AWS_SESSION_TOKEN", cast=str)
 
 
 # logging configuration
