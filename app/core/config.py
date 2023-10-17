@@ -1,6 +1,8 @@
 import logging
 import sys
 from typing import List, Any
+
+import boto3
 from pydantic_settings import BaseSettings
 from loguru import logger
 from starlette.config import Config
@@ -11,7 +13,7 @@ from app.core.logging import InterceptHandler
 
 class Settings(BaseSettings):
     config: Config = Config(".env")
-    API_PREFIX: str = "/api"
+    API_PREFIX: str = "/api/v1"
     JWT_TOKEN_PREFIX: str = "Token"
     VERSION: str = "1.0.0"
 
@@ -29,6 +31,9 @@ class Settings(BaseSettings):
     ALLOWED_HOSTS: List[str] = config(
         "ALLOWED_HOSTS", cast=CommaSeparatedStrings, default=""
     )
+    BUCKET_NAME: str = config("BUCKET_NAME", cast=str)
+    AWS_ACCESS_KEY: str = config("AWS_ACCESS_KEY", cast=str)
+    AWS_SECRET_KEY: str = config("AWS_SECRET_KEY", cast=str)
 
 
 # logging configuration
