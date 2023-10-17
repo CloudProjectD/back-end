@@ -103,6 +103,11 @@ MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=1234
 DB_NAME=fastapi
+BUCKET_NAME=
+AWS_ACCESS_KEY=
+AWS_SECRET_KEY=
+AWS_SESSION_TOKEN=
+
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -292,18 +297,18 @@ Please refer to `LICENSE.txt` for LICENSE.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/Terraform-Canvas/back-end.svg?style=flat
-[contributors-url]: https://github.com/Terraform-Canvas/back-end/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/Terraform-Canvas/back-end.svg?style=flat
-[forks-url]: https://github.com/Terraform-Canvas/back-end/network/members
-[stars-shield]: https://img.shields.io/github/stars/Terraform-Canvas/back-end.svg?style=flat
-[stars-url]: https://github.com/Terraform-Canvas/back-end/stargazers
-[issues-shield]: https://img.shields.io/github/issues/Terraform-Canvas/back-end.svg?style=flat
-[issues-url]: https://github.com/Terraform-Canvas/back-end/issues
-[pr-url]: https://github.com/Terraform-Canvas/back-end/pulls
-[pr-shield]: https://img.shields.io/github/issues-pr/Terraform-Canvas/back-end.svg?style=flat
-[license-shield]: https://img.shields.io/github/license/Terraform-Canvas/back-end.svg?style=flat
-[license-url]: https://github.com/Terraform-Canvas/back-end/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/CloudProjectD/back-end.svg?style=flat
+[contributors-url]: https://github.com/CloudProjectD/back-end/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/CloudProjectD/back-end.svg?style=flat
+[forks-url]: https://github.com/CloudProjectD/back-end/network/members
+[stars-shield]: https://img.shields.io/github/stars/CloudProjectD/back-end.svg?style=flat
+[stars-url]: https://github.com/CloudProjectD/back-end/stargazers
+[issues-shield]: https://img.shields.io/github/issues/CloudProjectD/back-end.svg?style=flat
+[issues-url]: https://github.com/CloudProjectD/back-end/issues
+[pr-url]: https://github.com/CloudProjectD/back-end/pulls
+[pr-shield]: https://img.shields.io/github/issues-pr/CloudProjectD/back-end.svg?style=flat
+[license-shield]: https://img.shields.io/github/license/CloudProjectD/back-end.svg?style=flat
+[license-url]: https://github.com/CloudProjectD/back-end/blob/master/LICENSE.txt
 
 [python]: https://img.shields.io/badge/Python-3776AB?style=flat&logo=Python&logoColor=white
 [python-url]: https://www.python.org/
