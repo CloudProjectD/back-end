@@ -3,4 +3,4 @@
 from app.db.base_class import Base  # noqa
 from app.models.schemas.users import User  # noqa
 from app.models.schemas.posts import Post  # noqa
-from app.models.schemas.rooms import Room  # noqa
+from app.models.schemas.markets import Market  # noqa

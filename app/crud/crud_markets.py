@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
-from app.models.domain import rooms
-from app.models.schemas.rooms import Room
+from app.models.domain import markets
+from app.models.schemas.markets import Market
 
 
-def create(db: Session, *, obj_in: rooms.RoomCreate, post_id: int) -> Room:
+def create(db: Session, *, obj_in: markets.MarketCreate, post_id: int) -> Market:
     db_obj = None
     if obj_in.starting_price:
-        db_obj = Room(
+        db_obj = Market(
             starting_price=obj_in.starting_price,
             price=obj_in.price,
             auction=obj_in.auction,
@@ -14,7 +14,7 @@ def create(db: Session, *, obj_in: rooms.RoomCreate, post_id: int) -> Room:
             post_id=post_id,
         )
     else:
-        db_obj = Room(
+        db_obj = Market(
             price=obj_in.price,
             auction=obj_in.auction,
             deadline=obj_in.deadline,

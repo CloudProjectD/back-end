@@ -6,7 +6,7 @@ from app.resources.status import Status
 
 if TYPE_CHECKING:
     from .users import User  # noqa: F401
-    from .rooms import Room  # noqa: F401
+    from .markets import Market  # noqa: F401
 
 
 class Post(Base):
@@ -20,4 +20,4 @@ class Post(Base):
     created_at = Column(DateTime, nullable=False)
     category = Column(String(255), index=True)
     image = Column(Boolean(), default=False)
-    room = relationship("Room", back_populates="post")
+    market = relationship("Market", back_populates="post")

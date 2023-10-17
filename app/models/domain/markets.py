@@ -4,7 +4,7 @@ import datetime
 from app.resources.status import Status
 
 
-class RoomCreate(BaseModel):
+class MarketCreate(BaseModel):
     post_id: Optional[int] = None
     starting_price: Optional[int] = None
     price: int
