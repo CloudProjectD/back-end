@@ -21,3 +21,4 @@ class Post(Base):
     category = Column(String(255), index=True)
     image = Column(Boolean(), default=False)
     market = relationship("Market", back_populates="post")
+    likes = relationship("Like", back_populates="post")

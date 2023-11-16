@@ -12,3 +12,4 @@ class User(Base):
     username = Column(String(255), index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     posts = relationship("Post", back_populates="user")
+    likes = relationship("Like", back_populates="user")
