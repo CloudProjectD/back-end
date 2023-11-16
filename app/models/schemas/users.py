@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .posts import Post  # noqa: F401
+    from .likes import Like  # noqa: F401
 
 
 class User(Base):

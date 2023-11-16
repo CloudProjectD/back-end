@@ -12,4 +12,4 @@ class Like(Base):
     user_id = Column(Integer, ForeignKey("user.id"))
     post_id = Column(Integer, ForeignKey("post.id"))
     user = relationship("User", back_populates="likes")
-    post = relationship("Post", back_populates="likes")
+    posts = relationship("Post", back_populates="like")
