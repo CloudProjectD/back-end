@@ -18,8 +18,8 @@ def create_room_posts(
     # post data create
     post_data = crud_posts.create(db=db, obj_in=room_in, files=files)
     # room data create
-    room_date = crud_rooms.create(db=db, obj_in=room_in, post_id=post_data.id)
-    if room_date and post_data:
+    room_data = crud_rooms.create(db=db, obj_in=room_in, post_id=post_data.id)
+    if room_data and post_data:
         return {"message": "room category create success"}
     else:
         raise HTTPException(
