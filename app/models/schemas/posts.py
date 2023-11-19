@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .rooms import Room  # noqa: F401
     from .frees import Free  # noqa: F401
 
+
 class Post(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     title = Column(String(255), index=True)
