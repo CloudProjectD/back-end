@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from .users import User  # noqa: F401
     from .posts import Post  # noqa: F401
 
+
 class Like(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(Integer, ForeignKey("user.id"))

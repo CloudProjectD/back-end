@@ -8,6 +8,7 @@ from app.crud import crud_rooms, crud_posts
 
 router = APIRouter()
 
+
 @router.post("/create")
 def create_room_posts(
     *,

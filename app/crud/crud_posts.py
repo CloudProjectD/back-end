@@ -24,7 +24,10 @@ def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) ->
     # if image exits, do uploading in s3
     if files:
         s3_result = s3_upload(
-            files=files, post_id=db_obj.id, user_email="sumink0903@gmail.com"
+            files=files,
+            post_id=db_obj.id,
+            user_email="sumink0903@gmail.com",
+            category=obj_in.category,
         )
         if not s3_result:
             raise HTTPException(

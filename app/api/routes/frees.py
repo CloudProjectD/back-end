@@ -8,6 +8,7 @@ from app.crud import crud_frees, crud_posts
 
 router = APIRouter()
 
+
 @router.post("/create")
 def create_free_posts(
     *,
