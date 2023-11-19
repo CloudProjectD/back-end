@@ -11,6 +11,8 @@ from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
 
+from app.db.fastapi_user import create_db_and_tables
+
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
@@ -35,7 +37,13 @@ def get_application() -> FastAPI:
     create_tables()
 
     application.include_router(api_router, prefix=settings.API_PREFIX)
+
     return application
 
 
 app = get_application()
+
+
+@app.on_event("startup")
+async def on_startup():
+    await create_db_and_tables()
