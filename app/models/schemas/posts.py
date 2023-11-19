@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from .users import User  # noqa: F401
     from .markets import Market  # noqa: F401
     from .likes import Like  # noqa: F401
+    from .rooms import Room  # noqa: F401
 
 class Post(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
@@ -21,3 +22,4 @@ class Post(Base):
     image = Column(Boolean(), default=False)
     market = relationship("Market", back_populates="post")
     like = relationship("Like", back_populates="posts")
+    room = relationship("Room", back_populates="post")
