@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from .markets import Market  # noqa: F401
     from .likes import Like  # noqa: F401
     from .rooms import Room  # noqa: F401
+    from .frees import Free  # noqa: F401
 
 class Post(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
@@ -23,3 +24,4 @@ class Post(Base):
     market = relationship("Market", back_populates="post")
     like = relationship("Like", back_populates="posts")
     room = relationship("Room", back_populates="post")
+    free = relationship("Free", back_populates="post")
