@@ -16,15 +16,12 @@ def create_market_posts(
     files: List[UploadFile],
     market_in: markets.MarketCreate = Depends()
 ) -> Any:
-    """
-    Create new user.
-    """
     # post data create
     post_data = crud_posts.create(db=db, obj_in=market_in, files=files)
-    # room data create
+    # market data create
     market_data = crud_markets.create(db=db, obj_in=market_in, post_id=post_data.id)
     if market_data and post_data:
-        return {"message": "create success"}
+        return {"message": "market category create success"}
     else:
         raise HTTPException(
             status_code=500,
