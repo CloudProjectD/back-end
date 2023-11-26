@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     MYSQL_PASSWORD: str = config("MYSQL_PASSWORD", cast=str, default="1234")
     DB_NAME: str = config("DB_NAME", cast=str, default="")
     DB_URL: str = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{DB_NAME}"
+    DYNAMODB_TABLE_NAME: str = config("DYNAMODB_TABLE_NAME", cast=str, default="")
 
     PROJECT_NAME: str = config("PROJECT_NAME", default="KHU-Market")
     ALLOWED_HOSTS: List[str] = config(
