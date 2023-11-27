@@ -17,7 +17,7 @@ def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) ->
         status=obj_in.status,
         category=obj_in.category,
         created_at=datetime.datetime.today(),
-        user_id=1,  # 추후 수정
+        user_id=1,  # should be changed with user email
     )
     # image bool value insert
     db_obj.image = True if files else False
