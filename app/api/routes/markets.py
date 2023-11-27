@@ -34,7 +34,7 @@ def create_market_posts(
 @router.get("/get/{category}/{page}")
 def get_market_posts(
     *, db: Session = Depends(database.get_db), category: str, page: int
-) -> tuple[Any, list[UploadFile] | list[Any]]:
+) -> Any:
     # market data get
     market_data = crud_posts.get(db=db, category=category, post_id=page)
     if market_data:
@@ -44,4 +44,19 @@ def get_market_posts(
         raise HTTPException(
             status_code=500,
             detail="getting market data failed",
+        )
+
+@router.get("/get_all")
+def get_all_market_posts(
+    *, db: Session = Depends(database.get_db)
+) -> Any:
+    # market data get
+    market_data = crud_posts.get_all(db=db,category="market")
+    if market_data:
+        res_data = jsonable_encoder(market_data)
+        return JSONResponse(content=res_data)
+    else:
+        raise HTTPException(
+            status_code=500,
+            detail="getting all market data failed",
         )
