@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     AWS_ACCESS_KEY: str = config("AWS_ACCESS_KEY", cast=str)
     AWS_SECRET_KEY: str = config("AWS_SECRET_KEY", cast=str)
     AWS_SESSION_TOKEN: str = config("AWS_SESSION_TOKEN", cast=str)
-
+    AWS_REGION: str = config("AWS_REGION", cast=str)
     GOOGLE_CLIENT_ID: str = config("GOOGLE_CLIENT_ID", cast=str)
     GOOGLE_CLIENT_SECRET: str = config("GOOGLE_CLIENT_SECRET", cast=str)
     GOOGLE_CALLBACK_URL: str = config("GOOGLE_CALLBACK_URL", cast=str)
