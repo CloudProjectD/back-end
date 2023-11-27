@@ -46,12 +46,11 @@ def get_market_posts(
             detail="getting market data failed",
         )
 
+
 @router.get("/get_all")
-def get_all_market_posts(
-    *, db: Session = Depends(database.get_db)
-) -> Any:
+def get_all_market_posts(*, db: Session = Depends(database.get_db)) -> Any:
     # market data get
-    market_data = crud_posts.get_all(db=db,category="market")
+    market_data = crud_posts.get_all(db=db, category="market")
     if market_data:
         res_data = jsonable_encoder(market_data)
         return JSONResponse(content=res_data)

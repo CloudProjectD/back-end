@@ -40,10 +40,10 @@ def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) ->
     return db_obj
 
 
-def get(
-    db: Session, *, category: str, post_id: int
-) -> markets.MarketGet | None:
-    post_data = db.query(Post).filter(Post.id == post_id, Post.category == category).one()
+def get(db: Session, *, category: str, post_id: int) -> markets.MarketGet | None:
+    post_data = (
+        db.query(Post).filter(Post.id == post_id, Post.category == category).one()
+    )
     if category == "market":
         if post_data.image:
             file_list = s3_get(
@@ -62,9 +62,8 @@ def get(
     else:
         return None
 
-def get_all(
-    db: Session, category: str
-) -> list[markets.MarketGet] | list[Any]:
+
+def get_all(db: Session, category: str) -> list[markets.MarketGet] | list[Any]:
     post_data = db.query(Post).filter(Post.category == category).all()
     result = []
     if category == "market":
@@ -73,7 +72,7 @@ def get_all(
             if post.image:
                 file_list = s3_get(
                     post_id=post.id,
-                    user_email="sumink0903@gmail.com", # should be changed with user email
+                    user_email="sumink0903@gmail.com",  # should be changed with user email
                     category=category,
                 )
             market_data = get_market(
