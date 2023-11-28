@@ -30,3 +30,14 @@ class MarketGet(BaseModel):
     user_id: int
     created_at: datetime.datetime
     image_list: List[str]
+
+
+class MarketUpdate(BaseModel):
+    starting_price: Optional[int] = None
+    price: int
+    auction: bool
+    deadline: datetime.datetime
+    title: str
+    content: str
+    status: Status
+    category: str
