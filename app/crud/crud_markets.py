@@ -45,3 +45,15 @@ def get(db: Session, *, post_id: int, post_data: Post, file_list: List[str]) -> 
         image_list=file_list,
     )
     return result
+
+
+def update(db: Session, *, obj_in: markets.MarketUpdate, post_id: int) -> Market:
+    db_obj = db.query(Market).filter(Market.post_id == post_id).one()
+    db_obj.starting_price = obj_in.starting_price
+    db_obj.price = obj_in.price
+    db_obj.auction = obj_in.auction
+    db_obj.deadline = obj_in.deadline
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj

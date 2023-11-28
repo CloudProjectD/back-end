@@ -31,12 +31,10 @@ def create_market_posts(
         )
 
 
-@router.get("/get/{category}/{page}")
-def get_market_posts(
-    *, db: Session = Depends(database.get_db), category: str, page: int
-) -> Any:
+@router.get("/get/{page}")
+def get_market_posts(*, db: Session = Depends(database.get_db), page: int) -> Any:
     # market data get
-    market_data = crud_posts.get(db=db, category=category, post_id=page)
+    market_data = crud_posts.get(db=db, category="market", post_id=page)
     if market_data:
         res_data = jsonable_encoder(market_data)
         return JSONResponse(content=res_data)
@@ -58,4 +56,23 @@ def get_all_market_posts(*, db: Session = Depends(database.get_db)) -> Any:
         raise HTTPException(
             status_code=500,
             detail="getting all market data failed",
+        )
+
+
+@router.put("/update/{page}")
+def update_market_posts(
+    *,
+    db: Session = Depends(database.get_db),
+    page: int,
+    market_in: markets.MarketUpdate = Depends()
+) -> Any:
+    # market data update
+    post_data = crud_posts.update(db=db, obj_in=market_in, post_id=page)
+    market_data = crud_markets.update(db=db, obj_in=market_in, post_id=page)
+    if market_data and post_data:
+        return {"message": "market category update success"}
+    else:
+        raise HTTPException(
+            status_code=500,
+            detail="update failed",
         )
