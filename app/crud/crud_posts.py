@@ -7,7 +7,7 @@ from fastapi import UploadFile
 from typing import List, Tuple, Any
 import datetime
 from app.models.domain import markets
-from app.crud.crud_markets import get as get_market
+from app.crud.crud_markets import get as get_market, update as update_market
 
 
 def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) -> Post:
@@ -80,3 +80,18 @@ def get_all(db: Session, category: str) -> list[markets.MarketGet] | list[Any]:
             )
             result.append(market_data)
     return result
+
+
+def update(db: Session, *, obj_in: posts.PostUpdate, post_id: int) -> Post:
+    db_obj = (
+        db.query(Post)
+        .filter(Post.id == post_id, Post.category == obj_in.category)
+        .one()
+    )
+    db_obj.title = obj_in.title
+    db_obj.content = obj_in.content
+    db_obj.status = obj_in.status
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
