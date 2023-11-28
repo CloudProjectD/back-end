@@ -9,3 +9,10 @@ class PostCreate(BaseModel):
     status: Status
     category: str
     user_id: Optional[int] = None
+
+
+class PostUpdate(BaseModel):
+    title: str
+    content: str
+    status: Status
+    user_id: Optional[int] = None

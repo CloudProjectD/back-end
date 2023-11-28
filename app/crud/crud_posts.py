@@ -7,7 +7,7 @@ from fastapi import UploadFile
 from typing import List, Tuple, Any
 import datetime
 from app.models.domain import markets
-from app.crud.crud_markets import get as get_market
+from app.crud.crud_markets import get as get_market, update as update_market
 
 
 def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) -> Post:
@@ -40,10 +40,10 @@ def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) ->
     return db_obj
 
 
-def get(
-    db: Session, *, category: str, post_id: int
-) -> list[markets.MarketGet] | list[Any]:
-    post_data = db.query(Post).filter(Post.id == post_id).one()
+def get(db: Session, *, category: str, post_id: int) -> markets.MarketGet | None:
+    post_data = (
+        db.query(Post).filter(Post.id == post_id, Post.category == category).one()
+    )
     if category == "market":
         if post_data.image:
             file_list = s3_get(
@@ -61,3 +61,37 @@ def get(
 
     else:
         return None
+
+
+def get_all(db: Session, category: str) -> list[markets.MarketGet] | list[Any]:
+    post_data = db.query(Post).filter(Post.category == category).all()
+    result = []
+    if category == "market":
+        for post in post_data:
+            file_list = []
+            if post.image:
+                file_list = s3_get(
+                    post_id=post.id,
+                    user_email="sumink0903@gmail.com",  # should be changed with user email
+                    category=category,
+                )
+            market_data = get_market(
+                db, post_id=post.id, post_data=post, file_list=file_list
+            )
+            result.append(market_data)
+    return result
+
+
+def update(db: Session, *, obj_in: posts.PostUpdate, post_id: int) -> Post:
+    db_obj = (
+        db.query(Post)
+        .filter(Post.id == post_id, Post.category == obj_in.category)
+        .one()
+    )
+    db_obj.title = obj_in.title
+    db_obj.content = obj_in.content
+    db_obj.status = obj_in.status
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
