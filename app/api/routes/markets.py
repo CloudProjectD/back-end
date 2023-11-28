@@ -76,3 +76,16 @@ def update_market_posts(
             status_code=500,
             detail="update failed",
         )
+
+
+@router.delete("/delete/{page}")
+def delete_market_posts(*, db: Session = Depends(database.get_db), page: int) -> Any:
+    # market data delete
+    try:
+        crud_posts.delete(db=db, category="market", post_id=page)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="delete failed",
+        )
+    return {"message": "market category delete success"}
