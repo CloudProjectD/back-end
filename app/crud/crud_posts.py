@@ -7,7 +7,7 @@ from fastapi import UploadFile
 from typing import List, Tuple, Any
 import datetime
 from app.models.domain import markets
-from app.crud.crud_markets import get as get_market, update as update_market
+from app.crud.crud_markets import get as get_market, delete as market_delete
 
 
 def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) -> Post:
@@ -95,3 +95,11 @@ def update(db: Session, *, obj_in: posts.PostUpdate, post_id: int) -> Post:
     db.commit()
     db.refresh(db_obj)
     return db_obj
+
+
+def delete(db: Session, *, category: str, post_id: int):
+    db_obj = db.query(Post).filter(Post.id == post_id, Post.category == category).one()
+    if category == "market":
+        market_delete(db=db, post_id=post_id)
+    db.delete(db_obj)
+    db.commit()
