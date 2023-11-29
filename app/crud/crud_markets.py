@@ -57,3 +57,9 @@ def update(db: Session, *, obj_in: markets.MarketUpdate, post_id: int) -> Market
     db.commit()
     db.refresh(db_obj)
     return db_obj
+
+
+def delete(db: Session, *, post_id: int):
+    db_obj = db.query(Market).filter(Market.post_id == post_id).one()
+    db.delete(db_obj)
+    db.commit()
