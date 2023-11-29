@@ -52,56 +52,62 @@ def s3_get(post_id: int, user_email: str, category: str) -> List[UploadFile]:
 
 class DynamoDBHandler:
     def __init__(self):
-        self.client = get_aws_client('dynamodb')
+        self.client = get_aws_client("dynamodb")
         self.table_name = settings.DYNAMODB_TABLE_NAME
         self.table = self.get_table()
 
     def get_table(self):
-        dynamodb = boto3.resource('dynamodb', 
-        region_name="us-east-1",
-        aws_access_key_id=settings.AWS_ACCESS_KEY,
-        aws_secret_access_key=settings.AWS_SECRET_KEY,
-        aws_session_token=settings.AWS_SESSION_TOKEN)
+        dynamodb = boto3.resource(
+            "dynamodb",
+            region_name="us-east-1",
+            aws_access_key_id=settings.AWS_ACCESS_KEY,
+            aws_secret_access_key=settings.AWS_SECRET_KEY,
+            aws_session_token=settings.AWS_SESSION_TOKEN,
+        )
         return dynamodb.Table(self.table_name)
 
     def put_object(self, message: Message):
         try:
             self.table.put_item(
                 Item={
-                    'id': message.id,
-                    'post_id': message.post_id,
-                    'created_at': message.created_at.isoformat(),
-                    'category': message.category,
-                    'sender': message.sender,
-                    'recipient': message.recipient,
-                    'content': message.content,
+                    "id": message.id,
+                    "post_id": message.post_id,
+                    "created_at": message.created_at.isoformat(),
+                    "category": message.category,
+                    "sender": message.sender,
+                    "recipient": message.recipient,
+                    "content": message.content,
                 }
             )
         except ClientError as err:
             print(err)
             return False
         return True
-    
+
     def get_all_user_objects(self, user_id: int):
         try:
             response = self.table.scan(
-                FilterExpression=Attr('sender').eq(user_id) | Attr('recipient').eq(user_id)
+                FilterExpression=Attr("sender").eq(user_id)
+                | Attr("recipient").eq(user_id)
             )
         except ClientError as err:
             print(err)
             return False
         else:
-            items = response.get('Items', [])
+            items = response.get("Items", [])
         return items
-    
+
     def get_user_post_objects(self, user_id: int, post_id: int):
         try:
             response = self.table.scan(
-                FilterExpression=(Attr('sender').eq(user_id) | Attr('recipient').eq(user_id)) & Attr('post_id').eq(post_id)
+                FilterExpression=(
+                    Attr("sender").eq(user_id) | Attr("recipient").eq(user_id)
+                )
+                & Attr("post_id").eq(post_id)
             )
         except ClientError as err:
             print(err)
             return False
         else:
-            items = response.get('Items', [])
+            items = response.get("Items", [])
         return items

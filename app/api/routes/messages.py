@@ -43,7 +43,7 @@ def create_message(
         return {"message": "Send post message success"}
 
 
-#유저와 관련된 전체 메시지 반환
+# 유저와 관련된 전체 메시지 반환
 @router.get("/list")
 def get_user_messages(
     db: Session = Depends(database.get_db),
@@ -54,23 +54,23 @@ def get_user_messages(
     current_user_id = get_user_by_email(db=db, email=current_user.email).id
     all_user_messages = dynamodb_handler.get_all_user_objects(user_id=current_user_id)
     if not all_user_messages:
-        raise HTTPException(
-            status_code=404,
-            detail="user messages not found"
-        )
-    
+        raise HTTPException(status_code=404, detail="user messages not found")
+
     result = []
     for msg in all_user_messages:
         print(msg["category"], msg["post_id"])
-        post_info = crud_posts.get(db=db, category=msg["category"], post_id=int(msg["post_id"]))
+        post_info = crud_posts.get(
+            db=db, category=msg["category"], post_id=int(msg["post_id"])
+        )
         print(post_info)
         if post_info:
-            result.append({
-                "message": msg, 
-                "post": post_info,
-            })
-    
-    
+            result.append(
+                {
+                    "message": msg,
+                    "post": post_info,
+                }
+            )
+
     return result
 
 
@@ -84,11 +84,10 @@ def get_post_messages(
     dynamodb_handler = DynamoDBHandler()
 
     current_user_id = get_user_by_email(db=db, email=current_user.email).id
-    all_user_post_messages = dynamodb_handler.get_user_post_objects(user_id=current_user_id, post_id=post_id)
+    all_user_post_messages = dynamodb_handler.get_user_post_objects(
+        user_id=current_user_id, post_id=post_id
+    )
     if not all_user_post_messages:
-        raise HTTPException(
-            status_code=404,
-            detail="post messages not found"
-        )
+        raise HTTPException(status_code=404, detail="post messages not found")
 
     return all_user_post_messages

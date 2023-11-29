@@ -13,6 +13,7 @@ class Message(BaseModel):
     content: str
     created_at: datetime = datetime.today()
 
+
 class MessageInput(BaseModel):
     post_id: int
     category: str
