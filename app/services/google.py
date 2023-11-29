@@ -34,7 +34,9 @@ class GoogleAuthBackend(AuthenticationBackend):
             finally:
                 db.close()
 
-        return JSONResponse(content={"info": json.loads(strategy_response.body), "member": member})
+        return JSONResponse(
+            content={"info": json.loads(strategy_response.body), "member": member}
+        )
 
     def get_google_access_token(self, user: User) -> Optional[str]:
         for account in user.oauth_accounts:
