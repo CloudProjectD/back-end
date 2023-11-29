@@ -1,5 +1,5 @@
 import boto3
-import logging
+from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 from fastapi import UploadFile
 from app.core.config import settings
@@ -52,56 +52,56 @@ def s3_get(post_id: int, user_email: str, category: str) -> List[UploadFile]:
 
 class DynamoDBHandler:
     def __init__(self):
-        self.client = get_aws_client("dynamodb")
+        self.client = get_aws_client('dynamodb')
         self.table_name = settings.DYNAMODB_TABLE_NAME
         self.table = self.get_table()
 
     def get_table(self):
-        dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
+        dynamodb = boto3.resource('dynamodb', 
+        region_name="us-east-1",
+        aws_access_key_id=settings.AWS_ACCESS_KEY,
+        aws_secret_access_key=settings.AWS_SECRET_KEY,
+        aws_session_token=settings.AWS_SESSION_TOKEN)
         return dynamodb.Table(self.table_name)
-
-    def create_table(self):
-        try:
-            self.client.create_table(
-                TableName=self.table_name,
-                KeySchema=[
-                    {"AttributeName": "user_id", "KeyType": "HASH"},
-                    {"AttributeName": "created_at", "KeyType": "RANGE"},
-                ],
-                AttributeDefinitions=[
-                    {"AttributeName": "user_id", "AttributeType": "N"},
-                    {"AttributeName": "created_at", "AttributeType": "S"},
-                ],
-                ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
-            )
-        except ClientError as e:
-            return False
-        return True
 
     def put_object(self, message: Message):
         try:
             self.table.put_item(
                 Item={
-                    "user_id": message.user_id,
-                    "post_id": message.post_id,
-                    "created_at": message.created_at.isoformat(),
-                    "category": message.category,
-                    "sender": message.sender_id,
-                    "recipient": message.recipient_id,
-                    "content": message.content,
+                    'id': message.id,
+                    'post_id': message.post_id,
+                    'created_at': message.created_at.isoformat(),
+                    'category': message.category,
+                    'sender': message.sender,
+                    'recipient': message.recipient,
+                    'content': message.content,
                 }
             )
-        except ClientError as e:
+        except ClientError as err:
+            print(err)
             return False
         return True
-
-    def get_object(self, user_id: int, created_at: str):
+    
+    def get_all_user_objects(self, user_id: int):
         try:
-            response = self.table.get_item(
-                Key={"user_id": user_id, "created_at": created_at}
+            response = self.table.scan(
+                FilterExpression=Attr('sender').eq(user_id) | Attr('recipient').eq(user_id)
             )
         except ClientError as err:
-            logging.error("Couldn't get message from table %s.", self.table_name)
-            raise
+            print(err)
+            return False
         else:
-            return response["Item"]
+            items = response.get('Items', [])
+        return items
+    
+    def get_user_post_objects(self, user_id: int, post_id: int):
+        try:
+            response = self.table.scan(
+                FilterExpression=(Attr('sender').eq(user_id) | Attr('recipient').eq(user_id)) & Attr('post_id').eq(post_id)
+            )
+        except ClientError as err:
+            print(err)
+            return False
+        else:
+            items = response.get('Items', [])
+        return items
