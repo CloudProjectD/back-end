@@ -2,7 +2,6 @@ from typing import Optional, List
 from pydantic import BaseModel
 import datetime
 from app.resources.status import Status
-from fastapi import UploadFile
 
 
 class MarketCreate(BaseModel):
