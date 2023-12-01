@@ -1,5 +1,4 @@
-import logging
-from typing import Any, List
+from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from app.api.dependencies import database
@@ -15,7 +14,7 @@ router = APIRouter()
 def create_free_posts(
     *,
     db: Session = Depends(database.get_db),
-    files: List[UploadFile],
+    files: List[UploadFile] = None,
     free_in: frees.FreeCreate = Depends()
 ) -> Any:
     # post data create

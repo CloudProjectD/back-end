@@ -30,6 +30,6 @@ def get(db: Session, *, post_id: int, post_data: Post, file_list: List[str]) -> 
 
 
 def delete(db: Session, *, post_id: int):
-  db_obj = db.query(Free).filter(Free.post_id == post_id).one()
-  db.delete(db_obj)
-  db.commit()
+    db_obj = db.query(Free).filter(Free.post_id == post_id).one()
+    db.delete(db_obj)
+    db.commit()
