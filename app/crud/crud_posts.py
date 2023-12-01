@@ -2,12 +2,13 @@ from sqlalchemy.orm import Session
 from app.models.domain import posts
 from app.models.schemas.posts import Post
 from app.services.aws import s3_upload, s3_get
-from fastapi import HTTPException, UploadFile
+from fastapi import HTTPException
 from fastapi import UploadFile
-from typing import List, Tuple, Any
+from typing import List, Any
 import datetime
 from app.models.domain import markets
 from app.crud.crud_markets import get as get_market, delete as market_delete
+from app.crud.crud_frees import get as get_free, delete as free_delete
 
 
 def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) -> Post:
@@ -40,30 +41,37 @@ def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) ->
     return db_obj
 
 
-def get(db: Session, *, category: str, post_id: int) -> markets.MarketGet | None:
+def get(db: Session, *, category: str, post_id: int) -> Any | None:
     post_data = (
         db.query(Post).filter(Post.id == post_id, Post.category == category).one()
     )
     if category == "market":
+        file_list = []
         if post_data.image:
             file_list = s3_get(
                 post_id=post_data.id,
                 user_email="sumink0903@gmail.com",
                 category=category,
             )
-            result = get_market(
-                db, post_id=post_id, post_data=post_data, file_list=file_list
+        result = get_market(
+            db, post_id=post_id, post_data=post_data, file_list=file_list
+        )
+        return result
+    elif category == "free":
+        file_list = []
+        if post_data.image:
+            file_list = s3_get(
+                post_id=post_data.id,
+                user_email="sumink0903@gmail.com",
+                category=category,
             )
-            return result
-        else:
-            result = get_market(db, post_id=post_id, post_data=post_data, file_list=[])
-            return result
-
+        result = get_free(db, post_id=post_id, post_data=post_data, file_list=file_list)
+        return result
     else:
         return None
 
 
-def get_all(db: Session, category: str) -> list[markets.MarketGet] | list[Any]:
+def get_all(db: Session, category: str) -> list[Any]:
     post_data = db.query(Post).filter(Post.category == category).all()
     result = []
     if category == "market":
@@ -79,6 +87,19 @@ def get_all(db: Session, category: str) -> list[markets.MarketGet] | list[Any]:
                 db, post_id=post.id, post_data=post, file_list=file_list
             )
             result.append(market_data)
+    if category == "free":
+        for post in post_data:
+            file_list = []
+            if post.image:
+                file_list = s3_get(
+                    post_id=post.id,
+                    user_email="sumink0903@gmail.com",  # should be changed with user email
+                    category=category,
+                )
+            free_data = get_free(
+                db, post_id=post.id, post_data=post, file_list=file_list
+            )
+            result.append(free_data)
     return result
 
 
@@ -101,5 +122,7 @@ def delete(db: Session, *, category: str, post_id: int):
     db_obj = db.query(Post).filter(Post.id == post_id, Post.category == category).one()
     if category == "market":
         market_delete(db=db, post_id=post_id)
+    elif category == "free":
+        free_delete(db=db, post_id=post_id)
     db.delete(db_obj)
     db.commit()
