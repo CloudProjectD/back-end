@@ -33,3 +33,8 @@ def update_user(db: Session, *, email: str, obj_in: users.UpdateUser) -> User:
         return user
 
     return None
+
+
+def get_user_by_id(db: Session, id: int):
+    user = db.query(User).filter(User.id == id).first()
+    return user
