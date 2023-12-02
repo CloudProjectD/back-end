@@ -19,7 +19,7 @@ def register_user(
     *,
     db: Session = Depends(database.get_db),
     user: User = Depends(current_active_user),
-    user_in: users.UpdateUser
+    user_in: users.UpdateUser,
 ) -> Any:
     """
     Update user info
@@ -35,14 +35,14 @@ def register_user(
             status_code=500,
             detail="Update user failed",
         )
-    
+
+
 @router.get(path="/get/{user_id}", description="유저 id로 유저 정보를 가져옵니다.")
 def get_user(
     *,
     db: Session = Depends(database.get_db),
     user_id: int,
 ) -> Any:
-    
     user_data = crud_users.get_user_by_id(db=db, id=user_id)
 
     if user_data:
