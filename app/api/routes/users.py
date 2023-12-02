@@ -7,6 +7,8 @@ from app.models.domain import users
 from app.crud import crud_users
 from app.services.user_manager import current_active_user
 from app.db.fastapi_user import User
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 
 router = APIRouter()
@@ -32,4 +34,22 @@ def register_user(
         raise HTTPException(
             status_code=500,
             detail="Update user failed",
+        )
+    
+@router.get(path="/get/{user_id}", description="유저 id로 유저 정보를 가져옵니다.")
+def get_user(
+    *,
+    db: Session = Depends(database.get_db),
+    user_id: int,
+) -> Any:
+    
+    user_data = crud_users.get_user_by_id(db=db, id=user_id)
+
+    if user_data:
+        enc_data = jsonable_encoder(user_data)
+        return JSONResponse(content=enc_data)
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail="find user by id failed",
         )
