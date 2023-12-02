@@ -53,3 +53,21 @@ def get_user(
             status_code=404,
             detail="find user by id failed",
         )
+
+
+@router.get(path="/get_active", description="현재 활성화된 유저 정보를 가져옵니다.")
+def get_current_active_user(
+    *,
+    db: Session = Depends(database.get_db),
+    user: User = Depends(current_active_user),
+) -> Any:
+    user_data = crud_users.get_user_by_email(db=db, email=user.email)
+
+    if user_data:
+        enc_data = jsonable_encoder(user_data)
+        return JSONResponse(content=enc_data)
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail="find current active user failed",
+        )
