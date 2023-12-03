@@ -9,6 +9,7 @@ import datetime
 from app.models.domain import markets
 from app.crud.crud_markets import get as get_market, delete as market_delete
 from app.crud.crud_frees import get as get_free, delete as free_delete
+from app.crud.crud_rooms import get as get_room, delete as room_delete
 
 
 def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) -> Post:
@@ -67,6 +68,16 @@ def get(db: Session, *, category: str, post_id: int) -> Any | None:
             )
         result = get_free(db, post_id=post_id, post_data=post_data, file_list=file_list)
         return result
+    elif category == "room":
+        file_list = []
+        if post_data.image:
+            file_list = s3_get(
+                post_id=post_data.id,
+                user_email="sumink0903@gmail.com",
+                category=category,
+            )
+        result = get_room(db, post_id=post_id, post_data=post_data, file_list=file_list)
+        return result
     else:
         return None
 
@@ -87,7 +98,7 @@ def get_all(db: Session, category: str) -> list[Any]:
                 db, post_id=post.id, post_data=post, file_list=file_list
             )
             result.append(market_data)
-    if category == "free":
+    elif category == "free":
         for post in post_data:
             file_list = []
             if post.image:
@@ -100,6 +111,19 @@ def get_all(db: Session, category: str) -> list[Any]:
                 db, post_id=post.id, post_data=post, file_list=file_list
             )
             result.append(free_data)
+    elif category == "room":
+        for post in post_data:
+            file_list = []
+            if post.image:
+                file_list = s3_get(
+                    post_id=post.id,
+                    user_email="sumink0903@gmail.com",  # should be changed with user email
+                    category=category,
+                )
+            room_data = get_room(
+                db, post_id=post.id, post_data=post, file_list=file_list
+            )
+            result.append(room_data)
     return result
 
 
@@ -124,5 +148,7 @@ def delete(db: Session, *, category: str, post_id: int):
         market_delete(db=db, post_id=post_id)
     elif category == "free":
         free_delete(db=db, post_id=post_id)
+    elif category == "room":
+        room_delete(db=db, post_id=post_id)
     db.delete(db_obj)
     db.commit()
