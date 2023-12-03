@@ -8,10 +8,8 @@ from fastapi import HTTPException
 def create_report(
     db: Session, reporter_id: int, report_in: ReportUser
 ) -> ReportResponse:
-    # Get the reported user by user name
-    reported_user = (
-        db.query(User).filter(User.username == report_in.reported_user_name).first()
-    )
+    # Get the reported user by user's id
+    reported_user = db.query(User).filter(User.id == report_in.reported_id).first()
 
     if not reported_user:
         raise HTTPException(status_code=400, detail="Reported user not found")
