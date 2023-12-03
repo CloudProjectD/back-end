@@ -7,6 +7,7 @@ from app.api.routes import frees
 from app.api.routes import oauth
 from app.api.routes import messages
 from app.api.routes import likes
+from app.api.routes import reports
 
 router = APIRouter()
 router.include_router(users.router, tags=["users"], prefix="/user")
@@ -16,3 +17,4 @@ router.include_router(frees.router, tags=["frees"], prefix="/free")
 router.include_router(oauth.router, tags=["auth"], prefix="/auth")
 router.include_router(messages.router, tags=["messages"], prefix="/message")
 router.include_router(likes.router, tags=["likes"], prefix="/like")
+router.include_router(reports.router, tags=["reports"], prefix="/report")
