@@ -6,20 +6,25 @@ from fastapi import HTTPException
 from fastapi import UploadFile
 from typing import List, Any
 import datetime
-from app.models.domain import markets
 from app.crud.crud_markets import get as get_market, delete as market_delete
 from app.crud.crud_frees import get as get_free, delete as free_delete
 from app.crud.crud_rooms import get as get_room, delete as room_delete
+from app.crud.crud_users import get_user_by_email
+from app.db.fastapi_user import User
 
 
-def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) -> Post:
+def create(
+    db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile], user: User
+) -> Post:
     db_obj = Post(
         title=obj_in.title,
         content=obj_in.content,
         status=obj_in.status,
         category=obj_in.category,
         created_at=datetime.datetime.today(),
-        user_id=1,  # should be changed with user email
+        user_id=get_user_by_email(
+            db=db, email=user.email
+        ).id,
     )
     # image bool value insert
     db_obj.image = True if files else False
@@ -31,7 +36,7 @@ def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) ->
         s3_result = s3_upload(
             files=files,
             post_id=db_obj.id,
-            user_email="sumink0903@gmail.com",
+            user_email=user.email,
             category=obj_in.category,
         )
         if not s3_result:
@@ -42,7 +47,7 @@ def create(db: Session, *, obj_in: posts.PostCreate, files: List[UploadFile]) ->
     return db_obj
 
 
-def get(db: Session, *, category: str, post_id: int) -> Any | None:
+def get(db: Session, *, category: str, post_id: int, user: User) -> Any | None:
     post_data = (
         db.query(Post).filter(Post.id == post_id, Post.category == category).one()
     )
@@ -51,7 +56,7 @@ def get(db: Session, *, category: str, post_id: int) -> Any | None:
         if post_data.image:
             file_list = s3_get(
                 post_id=post_data.id,
-                user_email="sumink0903@gmail.com",
+                user_email=user.email,
                 category=category,
             )
         result = get_market(
@@ -63,7 +68,7 @@ def get(db: Session, *, category: str, post_id: int) -> Any | None:
         if post_data.image:
             file_list = s3_get(
                 post_id=post_data.id,
-                user_email="sumink0903@gmail.com",
+                user_email=user.email,
                 category=category,
             )
         result = get_free(db, post_id=post_id, post_data=post_data, file_list=file_list)
@@ -73,7 +78,7 @@ def get(db: Session, *, category: str, post_id: int) -> Any | None:
         if post_data.image:
             file_list = s3_get(
                 post_id=post_data.id,
-                user_email="sumink0903@gmail.com",
+                user_email=user.email,
                 category=category,
             )
         result = get_room(db, post_id=post_id, post_data=post_data, file_list=file_list)
@@ -82,7 +87,7 @@ def get(db: Session, *, category: str, post_id: int) -> Any | None:
         return None
 
 
-def get_all(db: Session, category: str) -> list[Any]:
+def get_all(db: Session, category: str, user: User) -> list[Any]:
     post_data = db.query(Post).filter(Post.category == category).all()
     result = []
     if category == "market":
@@ -91,7 +96,7 @@ def get_all(db: Session, category: str) -> list[Any]:
             if post.image:
                 file_list = s3_get(
                     post_id=post.id,
-                    user_email="sumink0903@gmail.com",  # should be changed with user email
+                    user_email=user.email,  # should be changed with user email
                     category=category,
                 )
             market_data = get_market(
@@ -104,7 +109,7 @@ def get_all(db: Session, category: str) -> list[Any]:
             if post.image:
                 file_list = s3_get(
                     post_id=post.id,
-                    user_email="sumink0903@gmail.com",  # should be changed with user email
+                    user_email=user.email,  # should be changed with user email
                     category=category,
                 )
             free_data = get_free(
@@ -117,7 +122,7 @@ def get_all(db: Session, category: str) -> list[Any]:
             if post.image:
                 file_list = s3_get(
                     post_id=post.id,
-                    user_email="sumink0903@gmail.com",  # should be changed with user email
+                    user_email=user.email,  # should be changed with user email
                     category=category,
                 )
             room_data = get_room(
