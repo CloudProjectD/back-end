@@ -1,11 +1,13 @@
 from typing import Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from app.api.dependencies import database
 from app.models.domain import rooms
 from app.crud import crud_rooms, crud_posts
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from app.services.user_manager import current_active_user
+from app.db.fastapi_user import User
 
 router = APIRouter()
 
@@ -14,11 +16,13 @@ router = APIRouter()
 def create_room_posts(
     *,
     db: Session = Depends(database.get_db),
-    files: List[UploadFile] = None,
-    room_in: rooms.RoomCreate = Depends()
+    files: List[UploadFile] = File(...),
+    room_in: rooms.RoomCreate,
+    current_user: User = Depends(current_active_user)
 ) -> Any:
+    rooms.RoomCreate(title="test", content="test", price=1000, deposit=1000)
     # post data create
-    post_data = crud_posts.create(db=db, obj_in=room_in, files=files)
+    post_data = crud_posts.create(db=db, obj_in=room_in, files=files, user=current_user)
     # room data create
     room_data = crud_rooms.create(db=db, obj_in=room_in, post_id=post_data.id)
     if room_data and post_data:
@@ -31,9 +35,14 @@ def create_room_posts(
 
 
 @router.get("/get/{page}")
-def get_room_posts(*, db: Session = Depends(database.get_db), page: int) -> Any:
+def get_room_posts(
+    *,
+    db: Session = Depends(database.get_db),
+    page: int,
+    current_user: User = Depends(current_active_user)
+) -> Any:
     # room data get
-    room_data = crud_posts.get(db=db, category="room", post_id=page)
+    room_data = crud_posts.get(db=db, category="room", post_id=page, user=current_user)
     if room_data:
         res_data = jsonable_encoder(room_data)
         return JSONResponse(content=res_data)
@@ -45,9 +54,13 @@ def get_room_posts(*, db: Session = Depends(database.get_db), page: int) -> Any:
 
 
 @router.get("/get_all")
-def get_all_room_posts(*, db: Session = Depends(database.get_db)) -> Any:
+def get_all_room_posts(
+    *,
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(current_active_user)
+) -> Any:
     # room data get
-    room_data = crud_posts.get_all(db=db, category="room")
+    room_data = crud_posts.get_all(db=db, category="room", user=current_user)
     if room_data:
         res_data = jsonable_encoder(room_data)
         return JSONResponse(content=res_data)
@@ -60,10 +73,7 @@ def get_all_room_posts(*, db: Session = Depends(database.get_db)) -> Any:
 
 @router.put("/update/{page}")
 def update_room_posts(
-    *,
-    db: Session = Depends(database.get_db),
-    page: int,
-    room_in: rooms.RoomUpdate = Depends()
+    *, db: Session = Depends(database.get_db), page: int, room_in: rooms.RoomUpdate
 ) -> Any:
     # market data update
     post_data = crud_posts.update(db=db, obj_in=room_in, post_id=page)
