@@ -3,13 +3,14 @@ from app.models.schemas.markets import Market
 
 
 def bid(db: Session, *, post_id: int, bid_price: int) -> Market:
-    market = db.query(Market).filter(Market.post_id == post_id).one()
+    with db.begin():
+        market = db.query(Market).filter(Market.post_id == post_id).one()
 
-    if bid_price > market.price:
-        market.price = bid_price
-        db.add(market)
-        db.commit()
-        db.refresh(market)
-        return market
+        if bid_price > market.price:
+            market.price = bid_price
+            db.add(market)
+            db.commit()
+            db.refresh(market)
+            return market
 
-    return None
+        return None
